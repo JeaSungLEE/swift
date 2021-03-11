@@ -263,18 +263,18 @@ done
 
 function call() {
     build_script_log_path=${BUILD_DIR}/.build_script_log
-    SECONDS=0
-    echo "[STARTED] [$SECONDS]" $(quoted_print "$@") >> ${build_script_log_path}
     if [[ ${DRY_RUN} ]] || [[ "${VERBOSE_BUILD}" ]]; then
         echo "${PS4}"$(quoted_print "$@")
     fi
     if [[ ! ${DRY_RUN} ]]; then
+        SECONDS=0
+        echo "[STARTED] [$SECONDS]" $(quoted_print "$@") >> ${build_script_log_path}
         { set -x; } 2>/dev/null
         "$@"
         { set +x; } 2>/dev/null
+        duration=$SECONDS
+        echo "[FINISHED] [$SECONDS]" $(quoted_print "$@") >> ${build_script_log_path}
     fi
-    duration=$SECONDS
-    echo "[FINISHED] [$SECONDS]" $(quoted_print "$@") >> ${build_script_log_path}
 }
 
 function with_pushd() {
